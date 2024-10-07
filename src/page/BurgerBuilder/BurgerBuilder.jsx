@@ -26,6 +26,8 @@ const BurgerBuilder = () => {
     {
       title: "Price",
       dataIndex: "price",
+      width: "30%",
+      render: (text, record) => <span>{record.price.toLocaleString()} VNĐ</span>,
     },
     {
       title: "Amount",
@@ -40,14 +42,16 @@ const BurgerBuilder = () => {
     },
     {
       dataIndex: "amount",
-      width: "50%",
-      render: (text, record) => record.amount * record.price,
+      width: "20%",
+      render: (text, record) => (
+        <span>{(record.amount * record.price).toLocaleString()} VNĐ</span>
+      ),
     },
     {
       title: "Action",
       dataIndex: "action",
       render: (text, record) => renderAction(record),
-      width: "35%",
+      width: "20s%",
     },
   ];
 

@@ -57,7 +57,7 @@ const Ingredients = () => {
     {
       title: "Total Amount",
       dataIndex: "totalAmount",
-      render: (text, record) => <span>{record.totalAmount}</span>,
+      render: (text, record) => <span>{record.totalAmount.toLocaleString()} VNĐ</span>,
     },
   ];
 
@@ -76,7 +76,7 @@ const Ingredients = () => {
       <Table
         className="table-ingredients"
         pagination={{
-          pageSize: 1,
+          pageSize: 2,
           total: tableData.length,
         }}
         columns={columns}

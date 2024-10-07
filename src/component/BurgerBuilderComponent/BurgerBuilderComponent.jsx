@@ -13,7 +13,7 @@ const BurgerComponent = ({ amount }) => {
 
       <div className="contentBurger">
         <span>Price</span>
-        <span>{amount}$</span>
+        <span>{amount?.toLocaleString()} VNĐ</span>
       </div>
       <StepComponent />
     </div>
