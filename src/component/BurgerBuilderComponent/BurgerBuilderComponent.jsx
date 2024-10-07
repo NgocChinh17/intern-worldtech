@@ -4,6 +4,7 @@ import { Image } from "antd";
 import burger from "../../assets/image/burger.jpg";
 
 import "./style.scss";
+import StepComponent from "../StepComponent/StepComponents";
 
 const BurgerComponent = ({ amount }) => {
   return (
@@ -14,6 +15,7 @@ const BurgerComponent = ({ amount }) => {
         <span>Price</span>
         <span>{amount}$</span>
       </div>
+      <StepComponent />
     </div>
   );
 };

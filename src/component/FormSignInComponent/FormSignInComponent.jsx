@@ -1,17 +1,32 @@
 import React from "react";
 import { Button, Checkbox, Form, Input, message } from "antd";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../constants/routes";
 
 import "./style.scss";
-import { useNavigate } from "react-router-dom";
 
-const FormSignInComponent = ({ mode }) => {
+const FormSignInComponent = () => {
   const navigate = useNavigate();
+
   const onFinish = (values) => {
-    console.log("success", values);
-    message.success("Đăng ký thành công, giờ bạn hãy đăng nhập");
-    setTimeout(() => {
-      navigate("/");
-    }, 1000);
+    const storedUserData = JSON.parse(localStorage.getItem("userData"));
+
+    if (
+      storedUserData &&
+      storedUserData.email === values.email &&
+      storedUserData.password === values.password
+    ) {
+      const { role } = storedUserData;
+
+      if (role === "admin") {
+        navigate(ROUTES.DASHBOARD_ADMIN);
+      } else {
+        navigate("/");
+      }
+      message.success("Đăng nhập thành công!");
+    } else {
+      message.error("Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.");
+    }
   };
 
   const onFinishFailed = (errorInfo) => {

@@ -1,8 +1,8 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 
 import BurgerComponent from "../../component/BurgerBuilderComponent/BurgerBuilderComponent";
 import FormOrderComponent from "../../component/FormOrderComponent/FormOrderComponent";
-import { useLocation } from "react-router-dom";
 
 const Order = () => {
   const location = useLocation();

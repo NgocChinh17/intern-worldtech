@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { Button, InputNumber } from "antd";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import BurgerComponent from "../../component/BurgerBuilderComponent/BurgerBuilderComponent";
 import TableComponent from "../../component/TableComponent/TableComponent";
@@ -9,8 +9,14 @@ import "./style.scss";
 
 const BurgerBuilder = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const userData = location.state?.userData || {};
+  const userData = JSON.parse(localStorage.getItem("userData"));
+
+  const [data, setData] = useState([
+    { key: "1", name: "Salad", price: 1000, amount: 0 },
+    { key: "2", name: "Bacon", price: 12000, amount: 0 },
+    { key: "3", name: "Cheese", price: 1000, amount: 0 },
+    { key: "4", name: "Meat", price: 10000, amount: 0 },
+  ]);
 
   const columns = [
     {
@@ -24,30 +30,26 @@ const BurgerBuilder = () => {
     {
       title: "Amount",
       dataIndex: "amount",
-      width: "55%",
       render: (text, record) => (
         <InputNumber
           min={0}
-          max={10}
           value={record.amount}
           onChange={(value) => handleAmountChange(record.key, value)}
         />
       ),
     },
     {
+      dataIndex: "amount",
+      width: "50%",
+      render: (text, record) => record.amount * record.price,
+    },
+    {
       title: "Action",
       dataIndex: "action",
       render: (text, record) => renderAction(record),
-      width: "50%",
+      width: "35%",
     },
   ];
-
-  const [data, setData] = useState([
-    { key: "1", name: "Salad", price: 1000, amount: 0 },
-    { key: "2", name: "Bacon", price: 12000, amount: 0 },
-    { key: "3", name: "Cheese", price: 1000, amount: 0 },
-    { key: "4", name: "Meat", price: 10000, amount: 0 },
-  ]);
 
   const renderAction = (record) => {
     return (
@@ -58,9 +60,9 @@ const BurgerBuilder = () => {
         <Button className="button-more" onClick={() => handleMore(record.key)}>
           More
         </Button>
-        <Button className="button-more" onClick={() => handleDelete(record.key)}>
+        {/* <Button className="button-more" onClick={() => handleDelete(record.key)}>
           xóa
-        </Button>
+        </Button> */}
       </div>
     );
   };
@@ -81,9 +83,9 @@ const BurgerBuilder = () => {
     );
   };
 
-  const handleDelete = (key) => {
-    setData((prevData) => prevData.filter((item) => item.key !== key));
-  };
+  // const handleDelete = (key) => {
+  //   setData((prevData) => prevData.filter((item) => item.key !== key));
+  // };
 
   const handleAmountChange = (key, value) => {
     setData((prevData) =>
@@ -96,7 +98,7 @@ const BurgerBuilder = () => {
   }, [data]);
 
   const handleSubmit = () => {
-    if (userData) {
+    if (!userData) {
       navigate("/SignIn", { state: { from: window.location.pathname } });
     } else {
       navigate("/Order", { state: { data, totalAmount } });
@@ -106,6 +108,7 @@ const BurgerBuilder = () => {
   return (
     <div>
       <BurgerComponent amount={totalAmount} />
+
       <div className="table-burger">
         <TableComponent columns={columns} data={data} />
         <div className="buttonTableCheckout">

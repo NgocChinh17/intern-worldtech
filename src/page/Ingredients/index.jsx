@@ -1,53 +1,86 @@
+import React, { useEffect, useState } from "react";
 import { Table } from "antd";
-import React from "react";
 import { useLocation } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 import "./style.scss";
+import StepComponent from "../../component/StepComponent/StepComponents";
 
 const Ingredients = () => {
   const location = useLocation();
-  const { totalAmount, data: dataIndex } = location.state || {};
+  const [storedData, setStoredData] = useState({
+    totalAmount: 0,
+    data: [],
+  });
+  const [userData, setUserData] = useState(null);
+  const [dataUpdate, setDataUpdate] = useState([]);
+
+  useEffect(() => {
+    const savedData = localStorage.getItem("orderData");
+    const userDataFromStorage = localStorage.getItem("userData");
+    const savedDataUpdate = JSON.parse(localStorage.getItem("data")) || [];
+
+    if (userDataFromStorage) {
+      setUserData(JSON.parse(userDataFromStorage));
+    }
+    if (location.state) {
+      const { totalAmount, data } = location.state;
+      setStoredData({ totalAmount, data });
+      localStorage.setItem("orderData", JSON.stringify({ totalAmount, data }));
+    } else if (savedData) {
+      setStoredData(JSON.parse(savedData));
+    }
+
+    setDataUpdate(savedDataUpdate);
+  }, [location.state]);
 
   const columns = [
     {
-      title: "Name",
+      title: "User Name",
+      dataIndex: "userName",
+      width: "20%",
+      render: () => (userData ? userData.name : "N/A"),
+    },
+    {
+      title: "Ingredient Name",
       dataIndex: "name",
-      width: "55%",
+      width: "50%",
       render: (text, record) => (
-        <div>
-          {record.dataIndex && Array.isArray(record.dataIndex) ? (
-            record.dataIndex.map((item) => (
-              <span key={item.key}>
-                {item.name} ({item.amount}){" "}
-              </span>
-            ))
-          ) : (
-            <span>{record.name}</span>
-          )}
-        </div>
+        <div>{record.name.map((item) => `${item.name} (${item.amount})`).join(", ")}</div>
       ),
     },
     {
-      title: "Price",
-      dataIndex: "price",
-      width: "40%",
-      render: (text) => <span>${text}</span>,
+      title: "Status",
+      dataIndex: "status",
+      width: "16%",
+      render: (text) => <span>pending</span>,
+    },
+    {
+      title: "Total Amount",
+      dataIndex: "totalAmount",
+      render: (text, record) => <span>{record.totalAmount}</span>,
     },
   ];
 
-  const data = [
-    {
-      price: totalAmount,
-      dataIndex,
-    },
-  ];
+  const tableData = dataUpdate.map((item) => ({
+    key: item.id || uuidv4(),
+    name: item.data,
+    totalAmount: item.totalAmount,
+    userName: item.name,
+  }));
 
   return (
     <div>
+      <div style={{ marginLeft: 200, marginRight: 300 }}>
+        <StepComponent />
+      </div>
       <Table
         className="table-ingredients"
-        pagination={5}
+        pagination={{
+          pageSize: 1,
+          total: tableData.length,
+        }}
         columns={columns}
-        dataSource={data}
+        dataSource={tableData}
       />
     </div>
   );

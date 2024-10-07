@@ -1,44 +1,38 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Button, Popover, Space } from "antd";
 import Search from "antd/es/transfer/search";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../constants/routes";
 import {
   AlignCenterOutlined,
+  EditOutlined,
   HomeOutlined,
-  LoadingOutlined,
   LoginOutlined,
   LogoutOutlined,
   ShoppingCartOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
 
-import { useLocation } from "react-router-dom";
-
 import "./style.scss";
 
 const Header = () => {
-  const location = useLocation();
-  const [userData, setUserData] = useState(null);
+  const storedUserData = JSON.parse(localStorage.getItem("userData"));
 
-  useEffect(() => {
-    if (location.state?.userData) {
-      setUserData(location.state.userData);
-      localStorage.setItem("userData", JSON.stringify(location.state.userData));
-    } else {
-      const storedUserData = localStorage.getItem("userData");
-      if (storedUserData) {
-        setUserData(JSON.parse(storedUserData));
-      }
-    }
-  }, [location.state?.userData]);
+  const userName = storedUserData ? storedUserData.name : null;
+  const role = storedUserData ? storedUserData.role : null;
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("userData");
+    localStorage.removeItem("orderData");
+    localStorage.removeItem("data");
+    navigate("/");
+    window.location.reload();
+  };
 
   const content = (
     <div>
-      <p>
-        <AlignCenterOutlined /> Đơn Hàng
-      </p>
-      <p>
+      <p onClick={handleLogout} style={{ cursor: "pointer" }}>
         <LogoutOutlined /> Đăng Xuất
       </p>
     </div>
@@ -47,14 +41,11 @@ const Header = () => {
   return (
     <div className="wrapperHeader">
       <Space className="spaceHeader">
-        <Link to="/">
-          <Button icon={<HomeOutlined />}>Trang Chủ</Button>
-        </Link>
-
         <div className="containerHeader">
           <Link className="linkHeader" to="/">
-            <Button icon={<LoadingOutlined />}>Burger Builder</Button>
+            <Button icon={<EditOutlined />}>Burger Builder</Button>
           </Link>
+
           <Link className="linkHeader" to={ROUTES.ORDER}>
             <Button icon={<ShoppingCartOutlined />} style={{ marginLeft: 20 }}>
               Orders
@@ -72,12 +63,18 @@ const Header = () => {
           <Search placeholder="input search text" />
         </div>
         <Popover content={content} title="Thông Tin" trigger="click">
-          <Link to={ROUTES.SIGN_IN}>
+          {userName ? (
             <Button>
-              <LoginOutlined />
-              Đăng Nhập
+              <LoginOutlined /> {userName}
             </Button>
-          </Link>
+          ) : (
+            <Link to={ROUTES.SIGN_IN}>
+              <Button>
+                <LoginOutlined />
+                Đăng Nhập
+              </Button>
+            </Link>
+          )}
         </Popover>
       </Space>
     </div>

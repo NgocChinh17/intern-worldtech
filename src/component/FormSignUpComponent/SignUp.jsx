@@ -2,11 +2,24 @@ import React from "react";
 import { Button, Checkbox, Form, Input, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../constants/routes";
+import { v4 as uuidv4 } from "uuid";
 
 const FormSignUpComponent = ({ mode }) => {
   const navigate = useNavigate();
+
   const onFinish = (values) => {
-    console.log("success", values);
+    const assignedRole = values.isAdmin ? "admin" : "user";
+
+    const userData = {
+      id: uuidv4(),
+      name: values.name,
+      email: values.email,
+      password: values.password,
+      role: assignedRole,
+    };
+
+    localStorage.setItem("userData", JSON.stringify(userData));
+
     message.success("Đăng ký thành công, giờ bạn hãy đăng nhập");
     setTimeout(() => {
       navigate(ROUTES.SIGN_IN);
@@ -60,6 +73,14 @@ const FormSignUpComponent = ({ mode }) => {
         rules={[{ required: true, message: "Please input your password!" }]}
       >
         <Input.Password />
+      </Form.Item>
+
+      <Form.Item
+        name="isAdmin"
+        valuePropName="checked"
+        wrapperCol={{ offset: 0, span: 16 }}
+      >
+        <Checkbox>Register as Admin</Checkbox>
       </Form.Item>
 
       <Form.Item name="remember" wrapperCol={{ offset: 0, span: 16 }}>
