@@ -1,49 +1,34 @@
 import React from "react";
-import { CartesianGrid, XAxis, YAxis, Tooltip, BarChart, Legend, Bar } from "recharts";
+import { Area, AreaChart, CartesianGrid, Tooltip, XAxis, YAxis } from "recharts";
 
-const AreaChartComponent = () => {
-  const data = [
-    {
-      name: "User A",
-      sp: 2400,
-    },
-    {
-      name: "Page B",
-      sp: 1398,
-    },
-    {
-      name: "Page C",
-      sp: 9800,
-    },
-    {
-      name: "Page D",
-      sp: 3908,
-    },
-    {
-      name: "Page E",
-      sp: 4800,
-    },
-    {
-      name: "Page F",
-      sp: 3800,
-    },
-    {
-      name: "Page G",
-      sp: 4300,
-    },
-  ];
-
+const AreaChartComponent = ({ data }) => {
   return (
-    <div style={{ margin: "-50px 0px 0px 200px" }}>
-      <h1>Biểu Đồ Doanh Thu</h1>
-      <BarChart width={730} height={250} data={data}>
-        <CartesianGrid strokeDasharray="3 3" />
+    <div style={{ margin: "-70px 0px 0px 200px" }}>
+      <h2>Biểu Đồ</h2>
+      <AreaChart
+        width={730}
+        height={250}
+        data={data}
+        margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+      >
+        <defs>
+          <linearGradient id="colorTotalAmount" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
+            <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+          </linearGradient>
+        </defs>
         <XAxis dataKey="name" />
         <YAxis />
+        <CartesianGrid strokeDasharray="3 3" />
         <Tooltip />
-        <Legend />
-        <Bar dataKey="sp" fill="#8884d8" />
-      </BarChart>
+        <Area
+          type="monotone"
+          dataKey="totalAmount"
+          stroke="#8884d8"
+          fillOpacity={1}
+          fill="url(#colorTotalAmount)"
+        />
+      </AreaChart>
     </div>
   );
 };

@@ -22,25 +22,23 @@ const Ingredients = () => {
   const [dataUpdate, setDataUpdate] = useState([]);
   const [currentStep, setCurrentStep] = useState(2);
   const [searchText, setSearchText] = useState("");
+  const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
     const savedData = localStorage.getItem("orderData");
     const userDataFromStorage = localStorage.getItem("userData");
     const savedDataUpdate = JSON.parse(localStorage.getItem("data")) || [];
-
     if (userDataFromStorage) {
       setUserData(JSON.parse(userDataFromStorage));
     }
     if (location.state) {
       const { totalAmount, data } = location.state;
-
       setStoredData({ totalAmount, data });
       setCurrentStep(3);
       localStorage.setItem("orderData", JSON.stringify({ totalAmount, data }));
     } else if (savedData) {
       setStoredData(JSON.parse(savedData));
     }
-
     setDataUpdate(savedDataUpdate);
   }, [location.state]);
 
@@ -107,6 +105,14 @@ const Ingredients = () => {
   //     )
   // );
 
+  useEffect(() => {
+    const processedChartData = dataUpdate.map((item) => ({
+      name: item.name,
+      totalAmount: item.totalAmount,
+    }));
+    setChartData(processedChartData);
+  }, [dataUpdate]);
+
   const filteredData = tableData.filter((item) => {
     const normalizedUserName = removeAccents(item.userName.toLowerCase());
     const normalizedPhone = removeAccents(item.phone.toLowerCase());
@@ -147,7 +153,7 @@ const Ingredients = () => {
         dataSource={filteredData}
       />
 
-      <AreaChartComponent />
+      <AreaChartComponent data={chartData} />
     </div>
   );
 };

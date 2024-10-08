@@ -107,7 +107,7 @@ const BurgerBuilder = () => {
     if (!userData) {
       navigate("/SignIn", { state: { from: window.location.pathname } });
     } else if (totalAmount === 0) {
-      message.info("Total amount must be greater than 0 to proceed.");
+      message.info("Vui lòng chọn món để tiếp tục mua sắm");
     } else {
       setCurrentStep(1);
       navigate("/Order", { state: { data, totalAmount } });
