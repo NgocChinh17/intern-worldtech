@@ -2,8 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Table } from "antd";
 import { useLocation } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import "./style.scss";
+
 import StepComponent from "../../component/StepComponent/StepComponents";
+import AreaChartComponent from "../../component/AreaChartComponent/AreaChartComponent";
+
+import { removeAccents } from "../../utils";
+
+import "./style.scss";
+import SearchComponent from "../../component/SearchComponet/SearchComponent";
 
 const Ingredients = () => {
   const location = useLocation();
@@ -11,8 +17,11 @@ const Ingredients = () => {
     totalAmount: 0,
     data: [],
   });
+
   const [userData, setUserData] = useState(null);
   const [dataUpdate, setDataUpdate] = useState([]);
+  const [currentStep, setCurrentStep] = useState(2);
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     const savedData = localStorage.getItem("orderData");
@@ -24,7 +33,9 @@ const Ingredients = () => {
     }
     if (location.state) {
       const { totalAmount, data } = location.state;
+
       setStoredData({ totalAmount, data });
+      setCurrentStep(3);
       localStorage.setItem("orderData", JSON.stringify({ totalAmount, data }));
     } else if (savedData) {
       setStoredData(JSON.parse(savedData));
@@ -37,13 +48,25 @@ const Ingredients = () => {
     {
       title: "User Name",
       dataIndex: "userName",
-      width: "20%",
-      render: () => (userData ? userData.name : "N/A"),
+      width: "13%",
+      render: (text, record) => record.userName || "N/A",
+    },
+    {
+      title: "User Phone",
+      dataIndex: "userPhone",
+      width: "15%",
+      render: (text, record) => <div>{record.phone}</div>,
+    },
+    {
+      title: "Note",
+      dataIndex: "note",
+      width: "17%",
+      render: (text, record) => <div>{record.note}</div>,
     },
     {
       title: "Ingredient Name",
       dataIndex: "name",
-      width: "50%",
+      width: "30%",
       render: (text, record) => (
         <div>{record.name.map((item) => `${item.name} (${item.amount})`).join(", ")}</div>
       ),
@@ -51,7 +74,7 @@ const Ingredients = () => {
     {
       title: "Status",
       dataIndex: "status",
-      width: "16%",
+      width: "10%",
       render: (text) => <span>pending</span>,
     },
     {
@@ -66,22 +89,65 @@ const Ingredients = () => {
     name: item.data,
     totalAmount: item.totalAmount,
     userName: item.name,
+    phone: item.phone,
+    note: item.Note,
   }));
+
+  // const filteredData = tableData.filter(
+  //   (item) =>
+  //     item.userName.toLowerCase().includes().removeAccents(searchText.toLowerCase()) ||
+  //     item.phone.toLowerCase().includes(searchText.toLowerCase()) ||
+  //     item.note.toLowerCase().includes(searchText.toLowerCase()) ||
+  //     item.totalAmount
+  //       .toLocaleString()
+  //       .toLowerCase()
+  //       .includes(searchText.toLowerCase()) ||
+  //     item.name.some((ingredient) =>
+  //       ingredient.name.toLowerCase().includes(searchText.toLowerCase())
+  //     )
+  // );
+
+  const filteredData = tableData.filter((item) => {
+    const normalizedUserName = removeAccents(item.userName.toLowerCase());
+    const normalizedPhone = removeAccents(item.phone.toLowerCase());
+    const normalizedNote = removeAccents(item.note.toLowerCase());
+    const normalizedTotalAmount = item.totalAmount.toLocaleString().toLowerCase();
+    const normalizedIngredientNames = item.name.map((ingredient) =>
+      removeAccents(ingredient.name.toLowerCase())
+    );
+
+    const normalizedSearchText = removeAccents(searchText.toLowerCase());
+
+    return (
+      normalizedUserName.includes(normalizedSearchText) ||
+      normalizedPhone.includes(normalizedSearchText) ||
+      normalizedNote.includes(normalizedSearchText) ||
+      normalizedTotalAmount.includes(normalizedSearchText) ||
+      normalizedIngredientNames.some((ingredient) =>
+        ingredient.includes(normalizedSearchText)
+      )
+    );
+  });
 
   return (
     <div>
       <div style={{ marginLeft: 200, marginRight: 300 }}>
-        <StepComponent />
+        <StepComponent currentStep={currentStep} />
+      </div>
+      <div style={{ marginLeft: 200, marginRight: 300, marginBottom: 10, width: 300 }}>
+        <SearchComponent onSearch={setSearchText} />{" "}
       </div>
       <Table
         className="table-ingredients"
         pagination={{
           pageSize: 2,
-          total: tableData.length,
+          total: filteredData.length,
         }}
         columns={columns}
-        dataSource={tableData}
+        dataSource={filteredData}
       />
+
+      <AreaChartComponent />
     </div>
   );
 };

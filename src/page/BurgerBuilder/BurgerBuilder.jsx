@@ -1,15 +1,17 @@
 import React, { useMemo, useState } from "react";
-import { Button, InputNumber } from "antd";
+import { Button, InputNumber, message } from "antd";
 import { useNavigate } from "react-router-dom";
 
 import BurgerComponent from "../../component/BurgerBuilderComponent/BurgerBuilderComponent";
 import TableComponent from "../../component/TableComponent/TableComponent";
+import StepComponent from "../../component/StepComponent/StepComponents";
 
 import "./style.scss";
 
 const BurgerBuilder = () => {
   const navigate = useNavigate();
   const userData = JSON.parse(localStorage.getItem("userData"));
+  const [currentStep, setCurrentStep] = useState(0);
 
   const [data, setData] = useState([
     { key: "1", name: "Salad", price: 1000, amount: 0 },
@@ -104,7 +106,10 @@ const BurgerBuilder = () => {
   const handleSubmit = () => {
     if (!userData) {
       navigate("/SignIn", { state: { from: window.location.pathname } });
+    } else if (totalAmount === 0) {
+      message.info("Total amount must be greater than 0 to proceed.");
     } else {
+      setCurrentStep(1);
       navigate("/Order", { state: { data, totalAmount } });
     }
   };
@@ -112,6 +117,10 @@ const BurgerBuilder = () => {
   return (
     <div>
       <BurgerComponent amount={totalAmount} />
+
+      <div style={{ margin: "10px 300px 10px 220px" }}>
+        <StepComponent currentStep={currentStep} />
+      </div>
 
       <div className="table-burger">
         <TableComponent columns={columns} data={data} />

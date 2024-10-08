@@ -1,30 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Form, Input } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 import "./style.scss";
+import StepComponent from "../StepComponent/StepComponents";
 
 const FormOrderComponent = ({ data }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { totalAmount } = location.state || {};
 
+  const [currentStep, setCurrentStep] = useState(1);
+
   const userData = JSON.parse(localStorage.getItem("userData")) || {};
 
   const onFinish = (values) => {
-    const existingDataUpdate = JSON.parse(localStorage.getItem("data")) || [];
-
     const orderId = uuidv4();
-
     const newData = { ...values, totalAmount, data, id: orderId };
+    const existingDataUpdate = JSON.parse(localStorage.getItem("data")) || [];
     localStorage.setItem("data", JSON.stringify([...existingDataUpdate, newData]));
-
+    setCurrentStep(2);
     navigate("/ingredients", { state: { data, totalAmount, ...values } });
   };
 
   return (
     <>
+      <div style={{ margin: "10px 300px 10px 220px" }}>
+        <StepComponent currentStep={currentStep} />
+      </div>
       <div className="wrapperFormOrder">
         <Form
           name="nest-messages"

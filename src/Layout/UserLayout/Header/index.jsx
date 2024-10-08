@@ -4,9 +4,7 @@ import Search from "antd/es/transfer/search";
 import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../constants/routes";
 import {
-  AlignCenterOutlined,
   EditOutlined,
-  HomeOutlined,
   LoginOutlined,
   LogoutOutlined,
   ShoppingCartOutlined,
@@ -19,7 +17,6 @@ const Header = () => {
   const storedUserData = JSON.parse(localStorage.getItem("userData"));
 
   const userName = storedUserData ? storedUserData.name : null;
-  const role = storedUserData ? storedUserData.role : null;
   const navigate = useNavigate();
 
   const handleLogout = () => {
