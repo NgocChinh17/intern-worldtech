@@ -9,10 +9,10 @@ const StepComponent = ({ currentStep }) => {
         current={currentStep}
         items={[
           {
-            title: "Order",
+            title: "Burger",
           },
           {
-            title: "Information",
+            title: "Order",
           },
           {
             title: "Done",

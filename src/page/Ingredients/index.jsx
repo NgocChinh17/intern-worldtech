@@ -5,10 +5,9 @@ import { v4 as uuidv4 } from "uuid";
 
 import StepComponent from "../../component/StepComponent/StepComponents";
 import AreaChartComponent from "../../component/AreaChartComponent/AreaChartComponent";
+import SearchComponent from "../../component/SearchComponent/SearchComponent";
 
 import { removeAccents } from "../../utils";
-
-import SearchComponent from "../../component/SearchComponent/SearchComponent";
 
 import "./style.scss";
 
@@ -29,6 +28,7 @@ const Ingredients = () => {
     const savedData = localStorage.getItem("orderData");
     const userDataFromStorage = localStorage.getItem("userData");
     const savedDataUpdate = JSON.parse(localStorage.getItem("data")) || [];
+
     if (userDataFromStorage) {
       setUserData(JSON.parse(userDataFromStorage));
     }
@@ -48,19 +48,52 @@ const Ingredients = () => {
       title: "User Name",
       dataIndex: "userName",
       width: "13%",
-      render: (text, record) => record.userName || "N/A",
+      render: (text, record) => (
+        <div
+          style={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            width: 83,
+          }}
+        >
+          {record.userName || "N/A"}
+        </div>
+      ),
     },
     {
       title: "User Phone",
       dataIndex: "userPhone",
       width: "15%",
-      render: (text, record) => <div>{record.phone}</div>,
+      render: (text, record) => (
+        <div
+          style={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            width: 83,
+          }}
+        >
+          {record.phone}
+        </div>
+      ),
     },
     {
       title: "Note",
       dataIndex: "note",
       width: "17%",
-      render: (text, record) => <div>{record.note}</div>,
+      render: (text, record) => (
+        <div
+          style={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            width: 100,
+          }}
+        >
+          {record.note}
+        </div>
+      ),
     },
     {
       title: "Ingredient Name",
@@ -141,9 +174,11 @@ const Ingredients = () => {
       <div style={{ marginLeft: 200, marginRight: 300 }}>
         <StepComponent currentStep={currentStep} />
       </div>
+
       <div style={{ marginLeft: 200, marginRight: 300, marginBottom: 10, width: 300 }}>
         <SearchComponent onSearch={setSearchText} />{" "}
       </div>
+
       <Table
         className="table-ingredients"
         pagination={{
