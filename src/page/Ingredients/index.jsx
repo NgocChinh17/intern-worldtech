@@ -8,8 +8,9 @@ import AreaChartComponent from "../../component/AreaChartComponent/AreaChartComp
 
 import { removeAccents } from "../../utils";
 
+import SearchComponent from "../../component/SearchComponent/SearchComponent";
+
 import "./style.scss";
-import SearchComponent from "../../component/SearchComponet/SearchComponent";
 
 const Ingredients = () => {
   const location = useLocation();
