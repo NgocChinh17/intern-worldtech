@@ -10,6 +10,7 @@ import SignUp from "./page/SignUp/signUp.jsx";
 import Order from "./page/Order/Order.jsx";
 import BurgerBuilder from "./page/BurgerBuilder/BurgerBuilder.jsx";
 import Ingredients from "./page/Ingredients";
+import AreaChart from "./page/AreaCharts/AreaChart.jsx";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route index element={<BurgerBuilder />} />
         <Route path={ROUTES.ORDER} element={<Order />} />
         <Route path={ROUTES.INGREDIENTS} element={<Ingredients />} />
+        <Route path={ROUTES.AREA_CHART} element={<AreaChart />} />
       </Route>
     </Routes>
   );

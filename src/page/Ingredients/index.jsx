@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Table } from "antd";
 import { useLocation } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
+import { debounce } from "lodash";
 
 import StepComponent from "../../component/StepComponent/StepComponents";
-import AreaChartComponent from "../../component/AreaChartComponent/AreaChartComponent";
 import SearchComponent from "../../component/SearchComponent/SearchComponent";
 
 import { removeAccents } from "../../utils";
@@ -22,7 +22,6 @@ const Ingredients = () => {
   const [dataUpdate, setDataUpdate] = useState([]);
   const [currentStep, setCurrentStep] = useState(2);
   const [searchText, setSearchText] = useState("");
-  const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
     const savedData = localStorage.getItem("orderData");
@@ -45,7 +44,7 @@ const Ingredients = () => {
 
   const columns = [
     {
-      title: "User Name",
+      title: "Name",
       dataIndex: "userName",
       width: "13%",
       render: (text, record) => (
@@ -62,7 +61,7 @@ const Ingredients = () => {
       ),
     },
     {
-      title: "User Phone",
+      title: "Phone",
       dataIndex: "userPhone",
       width: "15%",
       render: (text, record) => (
@@ -96,7 +95,7 @@ const Ingredients = () => {
       ),
     },
     {
-      title: "Ingredient Name",
+      title: "Burger Name",
       dataIndex: "name",
       width: "30%",
       render: (text, record) => (
@@ -110,7 +109,7 @@ const Ingredients = () => {
       render: (text) => <span>pending</span>,
     },
     {
-      title: "Total Amount",
+      title: "Total Price",
       dataIndex: "totalAmount",
       render: (text, record) => <span>{record.totalAmount.toLocaleString()} VNĐ</span>,
     },
@@ -139,13 +138,9 @@ const Ingredients = () => {
   //     )
   // );
 
-  useEffect(() => {
-    const processedChartData = dataUpdate.map((item) => ({
-      name: item.name,
-      totalAmount: item.totalAmount,
-    }));
-    setChartData(processedChartData);
-  }, [dataUpdate]);
+  const handleSearch = debounce((value) => {
+    setSearchText(value);
+  }, 1000);
 
   const filteredData = tableData.filter((item) => {
     const normalizedUserName = removeAccents(item.userName.toLowerCase());
@@ -176,7 +171,7 @@ const Ingredients = () => {
       </div>
 
       <div style={{ marginLeft: 200, marginRight: 300, marginBottom: 10, width: 300 }}>
-        <SearchComponent onSearch={setSearchText} />{" "}
+        <SearchComponent onSearch={handleSearch} />{" "}
       </div>
 
       <Table
@@ -188,8 +183,6 @@ const Ingredients = () => {
         columns={columns}
         dataSource={filteredData}
       />
-
-      <AreaChartComponent data={chartData} />
     </div>
   );
 };

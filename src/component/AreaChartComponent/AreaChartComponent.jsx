@@ -1,9 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Area, AreaChart, CartesianGrid, Tooltip, XAxis, YAxis } from "recharts";
 
-const AreaChartComponent = ({ data }) => {
+const AreaChartComponent = () => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const savedDataUpdate = JSON.parse(localStorage.getItem("data")) || [];
+    const formattedData = savedDataUpdate.map((item, index) => ({
+      name: item.name,
+      TotalPrice: item.totalAmount,
+    }));
+    setData(formattedData);
+  }, []);
+
   return (
-    <div style={{ margin: "-70px 0px 0px 200px" }}>
+    <div style={{ margin: "30px 0px 0px 200px" }}>
       <h2>Biểu Đồ</h2>
       <AreaChart
         width={730}
@@ -12,7 +23,7 @@ const AreaChartComponent = ({ data }) => {
         margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
       >
         <defs>
-          <linearGradient id="colorTotalAmount" x1="0" y1="0" x2="0" y2="1">
+          <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
             <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
             <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
           </linearGradient>
@@ -23,10 +34,10 @@ const AreaChartComponent = ({ data }) => {
         <Tooltip />
         <Area
           type="monotone"
-          dataKey="totalAmount"
+          dataKey="TotalPrice"
           stroke="#8884d8"
           fillOpacity={1}
-          fill="url(#colorTotalAmount)"
+          fill="url(#colorUv)"
         />
       </AreaChart>
     </div>

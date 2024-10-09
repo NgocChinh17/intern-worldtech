@@ -4,4 +4,5 @@ export const ROUTES = {
   BURGER_BUILDER: "/burger",
   ORDER: "/order",
   INGREDIENTS: "/ingredients",
+  AREA_CHART: "/area-chart",
 };

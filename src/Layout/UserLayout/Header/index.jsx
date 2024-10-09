@@ -1,15 +1,17 @@
 import React from "react";
 import { Button, Popover, Space } from "antd";
-import Search from "antd/es/transfer/search";
 import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../constants/routes";
 import {
+  AlignLeftOutlined,
   EditOutlined,
   LoginOutlined,
   LogoutOutlined,
   ShoppingCartOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
+
+import Search from "antd/es/transfer/search";
 
 import "./style.scss";
 
@@ -29,6 +31,11 @@ const Header = () => {
 
   const content = (
     <div>
+      <Link to={ROUTES.AREA_CHART}>
+        <p style={{ cursor: "pointer", color: "#333" }}>
+          <AlignLeftOutlined /> Biểu Đồ
+        </p>
+      </Link>
       <p onClick={handleLogout} style={{ cursor: "pointer" }}>
         <LogoutOutlined /> Đăng Xuất
       </p>

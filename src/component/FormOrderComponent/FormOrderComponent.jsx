@@ -3,8 +3,9 @@ import { Button, Form, Input } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
-import "./style.scss";
 import StepComponent from "../StepComponent/StepComponents";
+
+import "./style.scss";
 
 const FormOrderComponent = ({ data }) => {
   const navigate = useNavigate();
@@ -66,7 +67,7 @@ const FormOrderComponent = ({ data }) => {
               },
             ]}
           >
-            <Input placeholder="Phone" />
+            <Input placeholder="Phone" maxLength={10} />
           </Form.Item>
 
           <Form.Item
