@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Area, AreaChart, CartesianGrid, Tooltip, XAxis, YAxis } from "recharts";
+import { Value } from "sass";
 
 const AreaChartComponent = () => {
   const [data, setData] = useState([]);
@@ -31,7 +32,7 @@ const AreaChartComponent = () => {
         <XAxis dataKey="name" />
         <YAxis />
         <CartesianGrid strokeDasharray="3 3" />
-        <Tooltip />
+        <Tooltip formatter={(value) => value.toLocaleString()} />
         <Area
           type="monotone"
           dataKey="TotalPrice"
