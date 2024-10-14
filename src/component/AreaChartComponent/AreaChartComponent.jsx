@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { Area, AreaChart, CartesianGrid, Tooltip, XAxis, YAxis } from "recharts";
-import { Value } from "sass";
+import React, { useEffect, useState } from "react"
+import { Area, AreaChart, CartesianGrid, Tooltip, XAxis, YAxis } from "recharts"
 
 const AreaChartComponent = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([])
 
   useEffect(() => {
-    const savedDataUpdate = JSON.parse(localStorage.getItem("data")) || [];
+    const savedDataUpdate = JSON.parse(localStorage.getItem("data")) || []
     const formattedData = savedDataUpdate.map((item, index) => ({
-      name: item.name,
+      // name: item.name,
       TotalPrice: item.totalAmount,
-    }));
-    setData(formattedData);
-  }, []);
+    }))
+    setData(formattedData)
+  }, [])
 
   return (
     <div style={{ margin: "30px 0px 0px 200px" }}>
@@ -42,7 +41,7 @@ const AreaChartComponent = () => {
         />
       </AreaChart>
     </div>
-  );
-};
+  )
+}
 
-export default AreaChartComponent;
+export default AreaChartComponent

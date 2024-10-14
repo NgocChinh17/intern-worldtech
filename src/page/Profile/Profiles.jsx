@@ -3,12 +3,20 @@ import { Button, Form, Input, message } from "antd"
 
 import "./style.scss"
 
-const Profiles = ({ data }) => {
+const Profiles = () => {
   const userData = JSON.parse(localStorage.getItem("userData")) || {}
+  const users = JSON.parse(localStorage.getItem("users")) || []
 
   const onFinish = (values) => {
     try {
       localStorage.setItem("userData", JSON.stringify({ ...userData, ...values }))
+
+      //cập nhật users
+      const updateUsers = users.map((user) =>
+        user.email === userData.email ? { ...user, ...values } : user
+      )
+      localStorage.setItem("users", JSON.stringify(updateUsers))
+
       message.success("Cập nhật thành công")
     } catch (error) {
       message.error("Có lỗi xảy ra khi cập nhật thông tin.")

@@ -18,6 +18,12 @@ const FormSignUpComponent = ({ mode }) => {
       role: assignedRole,
     }
 
+    const existingUsers = JSON.parse(localStorage.getItem("users")) || []
+
+    existingUsers.push(userData)
+
+    localStorage.setItem("users", JSON.stringify(existingUsers))
+
     localStorage.setItem("userData", JSON.stringify(userData))
 
     message.success("Đăng ký thành công, giờ bạn hãy đăng nhập")

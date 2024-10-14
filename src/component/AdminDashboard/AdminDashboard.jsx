@@ -264,7 +264,7 @@ const AdminDashboard = () => {
             name="name"
             rules={[{ required: true, message: "Please input your name!" }]}
           >
-            <Input />
+            <Input disabled />
           </Form.Item>
 
           <Form.Item
@@ -272,7 +272,7 @@ const AdminDashboard = () => {
             name="phone"
             rules={[{ required: true, message: "Please input your phone!" }]}
           >
-            <Input />
+            <Input disabled />
           </Form.Item>
 
           <Form.Item
@@ -280,7 +280,7 @@ const AdminDashboard = () => {
             name="price"
             rules={[{ required: true, message: "Please input your price!" }]}
           >
-            <Input />
+            <Input disabled />
           </Form.Item>
 
           <Form.Item

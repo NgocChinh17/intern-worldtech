@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react"
 
-import FormComponent from "../../component/FormSignUpComponent/SignUp";
+import FormComponent from "../../component/FormSignUpComponent/SignUp"
 
 const SignUp = () => {
-  const [mode, setMode] = useState("SignUp");
+  const [mode, setMode] = useState("SignUp")
 
   return (
     <div>
       <FormComponent mode={mode} />
     </div>
-  );
-};
+  )
+}
 
-export default SignUp;
+export default SignUp

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Table } from "antd"
+import { Table, Tag } from "antd"
 import { useLocation } from "react-router-dom"
 import { v4 as uuidv4 } from "uuid"
 import { debounce } from "lodash"
@@ -27,6 +27,7 @@ const Ingredients = () => {
     if (userDataFromStorage) {
       setUserData(JSON.parse(userDataFromStorage))
     }
+
     if (location.state) {
       const { totalAmount, data } = location.state
       const dateOrder = new Date().toDateString()
@@ -89,8 +90,28 @@ const Ingredients = () => {
     {
       title: "Status",
       dataIndex: "status",
-      render: (text) => <span>{text}</span>,
+      render: (text) => {
+        let color = ""
+        switch (text) {
+          case "pending":
+            color = "magenta"
+            break
+          case "doing":
+            color = "orange"
+            break
+          case "shipperReceived":
+            color = "blue"
+            break
+          case "done":
+            color = "green"
+            break
+          default:
+            color = "default"
+        }
+        return <Tag color={color}>{text}</Tag>
+      },
     },
+
     {
       title: "Total Price",
       dataIndex: "totalAmount",
@@ -105,23 +126,25 @@ const Ingredients = () => {
 
   const tableData = dataUpdate.map((item) => ({
     key: item.id || uuidv4(),
-    name: item.data,
-    totalAmount: item.totalAmount,
-    userName: item.name,
-    phone: item.phone,
-    note: item.Note,
+    name: Array.isArray(item.data) ? item.data : [],
+    totalAmount: typeof item.totalAmount === "number" ? item.totalAmount : 0,
+    userName: item.name || "N/A",
+    phone: item.phone || "N/A",
+    note: item.Note || "",
     date: item.date || new Date().toDateString(),
-    status: item.status || "Chưa Làm",
+    status: item.status || "pending",
   }))
 
   const filteredData = tableData.filter((item) => {
     const normalizedUserName = removeAccents(item.userName.toLowerCase())
     const normalizedPhone = removeAccents(item.phone.toLowerCase())
     const normalizedNote = removeAccents(item.note.toLowerCase())
-    const normalizedTotalAmount = item.totalAmount.toLocaleString().toLowerCase()
-    const normalizedIngredientNames = item.name.map((ingredient) =>
-      removeAccents(ingredient.name.toLowerCase())
-    )
+    const normalizedTotalAmount = item.totalAmount
+      ? item.totalAmount.toLocaleString().toLowerCase()
+      : ""
+    const normalizedIngredientNames = Array.isArray(item.name)
+      ? item.name.map((ingredient) => removeAccents(ingredient.name.toLowerCase()))
+      : []
 
     const normalizedSearchText = removeAccents(searchText.toLowerCase())
 

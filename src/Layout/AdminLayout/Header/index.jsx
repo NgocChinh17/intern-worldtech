@@ -1,31 +1,28 @@
-import React from "react";
-import { Button, Popover, Space } from "antd";
-import { Link, useNavigate } from "react-router-dom";
-import { ROUTES } from "../../../constants/routes";
+import React from "react"
+import { Button, Popover, Space } from "antd"
+import { Link, useNavigate } from "react-router-dom"
+import { ROUTES } from "../../../constants/routes"
 import {
   HomeOutlined,
   LoginOutlined,
   LogoutOutlined,
   UserOutlined,
-} from "@ant-design/icons";
+} from "@ant-design/icons"
 
-import Search from "antd/es/transfer/search";
+import Search from "antd/es/transfer/search"
 
-import "./style.scss";
+import "./style.scss"
 
 const Header = () => {
-  const storedUserData = JSON.parse(localStorage.getItem("userData"));
+  const storedUserData = JSON.parse(localStorage.getItem("userData"))
 
-  const userName = storedUserData ? storedUserData.name : null;
-  const navigate = useNavigate();
+  const userName = storedUserData ? storedUserData.name : null
+  const navigate = useNavigate()
 
   const handleLogout = () => {
-    localStorage.removeItem("userData");
-    localStorage.removeItem("orderData");
-    localStorage.removeItem("data");
-    navigate("/");
-    window.location.reload();
-  };
+    localStorage.removeItem("userData")
+    navigate("/")
+  }
 
   const content = (
     <div>
@@ -37,7 +34,7 @@ const Header = () => {
         <LogoutOutlined /> Đăng Xuất
       </p>
     </div>
-  );
+  )
 
   return (
     <div className="wrapperHeader">
@@ -67,7 +64,7 @@ const Header = () => {
         </Popover>
       </Space>
     </div>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

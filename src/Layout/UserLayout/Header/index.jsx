@@ -1,7 +1,7 @@
-import React from "react";
-import { Button, Popover, Space } from "antd";
-import { Link, useNavigate } from "react-router-dom";
-import { ROUTES } from "../../../constants/routes";
+import React from "react"
+import { Button, Popover, Space } from "antd"
+import { Link, useNavigate } from "react-router-dom"
+import { ROUTES } from "../../../constants/routes"
 import {
   EditOutlined,
   HighlightOutlined,
@@ -10,27 +10,22 @@ import {
   ShoppingCartOutlined,
   UnorderedListOutlined,
   UserOutlined,
-} from "@ant-design/icons";
+} from "@ant-design/icons"
 
-import Search from "antd/es/transfer/search";
+import Search from "antd/es/transfer/search"
 
-import "./style.scss";
+import "./style.scss"
 
 const Header = () => {
-  const storedUserData = JSON.parse(localStorage.getItem("userData"));
-
-  const { role } = storedUserData || [];
-
-  const userName = storedUserData ? storedUserData.name : null;
-  const navigate = useNavigate();
+  const storedUserData = JSON.parse(localStorage.getItem("userData"))
+  const { role } = storedUserData || {}
+  const userName = storedUserData ? storedUserData.name : null
+  const navigate = useNavigate()
 
   const handleLogout = () => {
-    localStorage.removeItem("userData");
-    localStorage.removeItem("orderData");
-    localStorage.removeItem("data");
-    navigate("/");
-    window.location.reload();
-  };
+    localStorage.removeItem("userData")
+    navigate("/")
+  }
 
   const content = (
     <div>
@@ -51,7 +46,7 @@ const Header = () => {
         <LogoutOutlined /> Đăng Xuất
       </p>
     </div>
-  );
+  )
 
   return (
     <div className="wrapperHeader">
@@ -77,6 +72,7 @@ const Header = () => {
         <div className="searchHeader">
           <Search placeholder="input search text" />
         </div>
+
         <Popover content={content} title="Thông Tin" trigger="click">
           {userName ? (
             <Button>
@@ -93,7 +89,7 @@ const Header = () => {
         </Popover>
       </Space>
     </div>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

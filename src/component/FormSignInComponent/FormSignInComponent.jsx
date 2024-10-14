@@ -9,26 +9,28 @@ const FormSignInComponent = () => {
   const navigate = useNavigate()
 
   const onFinish = (values) => {
-    const storedUserData = JSON.parse(localStorage.getItem("userData"))
+    const storedUsers = JSON.parse(localStorage.getItem("users")) || []
 
-    if (
-      storedUserData &&
-      storedUserData.email === values.email &&
-      storedUserData.password === values.password
-    ) {
-      const { role } = storedUserData
+    const user = storedUsers.find(
+      (user) => user.email === values.email && user.password === values.password
+    )
+
+    if (user) {
+      localStorage.setItem("userData", JSON.stringify(user))
+
+      const { role } = user
 
       if (role === "admin") {
         navigate(ROUTES.ADMIN.HOME_ADMIN)
       } else {
         navigate("/")
       }
+
       message.success("Đăng nhập thành công!")
     } else {
       message.error("Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.")
     }
   }
-
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo)
   }
