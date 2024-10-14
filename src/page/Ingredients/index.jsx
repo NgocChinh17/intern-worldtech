@@ -25,7 +25,11 @@ const Ingredients = () => {
     const savedDataUpdate = JSON.parse(localStorage.getItem("data")) || []
 
     if (userDataFromStorage) {
-      setUserData(JSON.parse(userDataFromStorage))
+      const user = JSON.parse(userDataFromStorage)
+      setUserData(user)
+
+      const userOrders = savedDataUpdate.filter((item) => item.userId === user.id)
+      setDataUpdate(userOrders)
     }
 
     if (location.state) {
@@ -40,7 +44,6 @@ const Ingredients = () => {
     } else if (savedData) {
       setStoredData(JSON.parse(savedData))
     }
-    setDataUpdate(savedDataUpdate)
   }, [location.state])
 
   const handleSearch = debounce((value) => {
@@ -111,7 +114,6 @@ const Ingredients = () => {
         return <Tag color={color}>{text}</Tag>
       },
     },
-
     {
       title: "Total Price",
       dataIndex: "totalAmount",

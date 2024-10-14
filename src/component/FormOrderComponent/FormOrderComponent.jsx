@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { AutoComplete, Button, Flex, Form, Input, Select } from "antd"
+import { AutoComplete, Button, Flex, Form, Input } from "antd"
 import { useNavigate, useLocation } from "react-router-dom"
 import { v4 as uuidv4 } from "uuid"
 
@@ -20,7 +20,7 @@ const FormOrderComponent = ({ data }) => {
   const { role } = userData
 
   const onFinish = (values) => {
-    const newData = { ...values, totalAmount, data, id: uuidv4() }
+    const newData = { ...values, totalAmount, data, id: uuidv4(), userId: id }
     const existingDataUpdate = JSON.parse(localStorage.getItem("data")) || []
     localStorage.setItem("data", JSON.stringify([...existingDataUpdate, newData]))
     setCurrentStep(2)
@@ -30,43 +30,25 @@ const FormOrderComponent = ({ data }) => {
   const Title = (props) => (
     <Flex align="center" justify="space-between">
       {props.title}
-      <a
-        href="https://www.google.com/search?q=antd"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        more
-      </a>
     </Flex>
   )
 
-  const renderItem = (title, count) => ({
+  const renderItem = (title) => ({
     value: title,
     label: (
-      <Flex align="center" justify="space-between">
-        {title}
+      <div>
         <span>
-          <UserOutlined /> {count}
+          <UserOutlined />
         </span>
-      </Flex>
+        <span style={{ marginLeft: 20 }}>{title}</span>
+      </div>
     ),
   })
 
   const options = [
     {
-      label: <Title title="Libraries" />,
-      options: [renderItem("AntDesign", 10000), renderItem("AntDesign UI", 10600)],
-    },
-    {
-      label: <Title title="Solutions" />,
-      options: [
-        renderItem("AntDesign UI FAQ", 60100),
-        renderItem("AntDesign FAQ", 30010),
-      ],
-    },
-    {
-      label: <Title title="Articles" />,
-      options: [renderItem("AntDesign design language", 100000)],
+      label: <Title title="Users" />,
+      options: [renderItem("AntDesign"), renderItem("AntDesign UI")],
     },
   ]
 
@@ -89,20 +71,7 @@ const FormOrderComponent = ({ data }) => {
             Note: "",
           }}
         >
-          <Form.Item
-            label="Name"
-            name="name"
-            rules={[
-              {
-                required: true,
-                message: "Please input your name!",
-              },
-            ]}
-          >
-            <Input placeholder="Name" />
-          </Form.Item>
-
-          {/* {role === "admin" ? (
+          {role === "admin" ? (
             <Form.Item
               label="Name"
               name="name"
@@ -135,7 +104,7 @@ const FormOrderComponent = ({ data }) => {
             >
               <Input placeholder="Name" />
             </Form.Item>
-          )} */}
+          )}
 
           <Form.Item
             label="Phone"
