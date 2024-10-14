@@ -1,37 +1,37 @@
-import React from "react";
-import { Button, Checkbox, Form, Input, message } from "antd";
-import { useNavigate } from "react-router-dom";
-import { ROUTES } from "../../constants/routes";
+import React from "react"
+import { Button, Checkbox, Form, Input, message } from "antd"
+import { useNavigate } from "react-router-dom"
+import { ROUTES } from "../../constants/routes"
 
-import "./style.scss";
+import "./style.scss"
 
 const FormSignInComponent = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const onFinish = (values) => {
-    const storedUserData = JSON.parse(localStorage.getItem("userData"));
+    const storedUserData = JSON.parse(localStorage.getItem("userData"))
 
     if (
       storedUserData &&
       storedUserData.email === values.email &&
       storedUserData.password === values.password
     ) {
-      const { role } = storedUserData;
+      const { role } = storedUserData
 
       if (role === "admin") {
-        navigate(ROUTES.DASHBOARD_ADMIN);
+        navigate(ROUTES.ADMIN.HOME_ADMIN)
       } else {
-        navigate("/");
+        navigate("/")
       }
-      message.success("Đăng nhập thành công!");
+      message.success("Đăng nhập thành công!")
     } else {
-      message.error("Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.");
+      message.error("Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.")
     }
-  };
+  }
 
   const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
-  };
+    console.log("Failed:", errorInfo)
+  }
 
   return (
     <Form
@@ -76,7 +76,7 @@ const FormSignInComponent = () => {
         </Button>
       </Form.Item>
     </Form>
-  );
-};
+  )
+}
 
-export default FormSignInComponent;
+export default FormSignInComponent

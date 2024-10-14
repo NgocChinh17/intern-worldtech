@@ -3,12 +3,9 @@ import { Button, Popover, Space } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../constants/routes";
 import {
-  EditOutlined,
-  HighlightOutlined,
+  HomeOutlined,
   LoginOutlined,
   LogoutOutlined,
-  ShoppingCartOutlined,
-  UnorderedListOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 
@@ -18,8 +15,6 @@ import "./style.scss";
 
 const Header = () => {
   const storedUserData = JSON.parse(localStorage.getItem("userData"));
-
-  const { role } = storedUserData || [];
 
   const userName = storedUserData ? storedUserData.name : null;
   const navigate = useNavigate();
@@ -34,15 +29,6 @@ const Header = () => {
 
   const content = (
     <div>
-      {role === "admin" && (
-        <p
-          style={{ cursor: "pointer" }}
-          onClick={() => navigate(ROUTES.ADMIN.HOME_ADMIN)}
-        >
-          <HighlightOutlined /> Quản Lý Sản Phẩm
-        </p>
-      )}
-
       <p style={{ cursor: "pointer" }} onClick={() => navigate(ROUTES.PAGE.PROFILE)}>
         <UserOutlined /> Thông Tin Tài Khoản
       </p>
@@ -58,19 +44,7 @@ const Header = () => {
       <Space className="spaceHeader">
         <div className="containerHeader">
           <Link className="linkHeader" to="/">
-            <Button icon={<EditOutlined />}>Burger Builder</Button>
-          </Link>
-
-          <Link className="linkHeader" to={ROUTES.PAGE.ORDER}>
-            <Button icon={<ShoppingCartOutlined />} style={{ marginLeft: 20 }}>
-              Orders
-            </Button>
-          </Link>
-
-          <Link className="linkHeader" to={ROUTES.PAGE.INGREDIENTS}>
-            <Button icon={<UnorderedListOutlined />} style={{ marginLeft: 20 }}>
-              Ingredients
-            </Button>
+            <Button icon={<HomeOutlined />}>Home</Button>
           </Link>
         </div>
 

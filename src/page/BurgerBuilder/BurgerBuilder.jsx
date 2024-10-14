@@ -110,7 +110,7 @@ const BurgerBuilder = () => {
       message.info("Vui lòng chọn món để tiếp tục mua sắm");
     } else {
       setCurrentStep(1);
-      navigate("/Order", { state: { data, totalAmount } });
+      navigate("/Order", { state: { data, totalAmount, id: userData.id } });
     }
   };
 
@@ -125,7 +125,7 @@ const BurgerBuilder = () => {
       <div className="table-burger">
         <TableComponent columns={columns} data={data} />
         <div className="buttonTableCheckout">
-          <Button type="primary" onClick={handleSubmit}>
+          <Button disabled={totalAmount === 0} type="primary" onClick={handleSubmit}>
             CheckOut
           </Button>
         </div>

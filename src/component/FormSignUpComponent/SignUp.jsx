@@ -1,14 +1,14 @@
-import React from "react";
-import { Button, Checkbox, Form, Input, message } from "antd";
-import { useNavigate } from "react-router-dom";
-import { ROUTES } from "../../constants/routes";
-import { v4 as uuidv4 } from "uuid";
+import React from "react"
+import { Button, Checkbox, Form, Input, message } from "antd"
+import { useNavigate } from "react-router-dom"
+import { ROUTES } from "../../constants/routes"
+import { v4 as uuidv4 } from "uuid"
 
 const FormSignUpComponent = ({ mode }) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const onFinish = (values) => {
-    const assignedRole = values.isAdmin ? "admin" : "user";
+    const assignedRole = values.isAdmin ? "admin" : "user"
 
     const userData = {
       id: uuidv4(),
@@ -16,19 +16,19 @@ const FormSignUpComponent = ({ mode }) => {
       email: values.email,
       password: values.password,
       role: assignedRole,
-    };
+    }
 
-    localStorage.setItem("userData", JSON.stringify(userData));
+    localStorage.setItem("userData", JSON.stringify(userData))
 
-    message.success("Đăng ký thành công, giờ bạn hãy đăng nhập");
+    message.success("Đăng ký thành công, giờ bạn hãy đăng nhập")
     setTimeout(() => {
-      navigate(ROUTES.SIGN_IN);
-    }, 1000);
-  };
+      navigate(ROUTES.SIGN_IN)
+    }, 1000)
+  }
 
   const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
-  };
+    console.log("Failed:", errorInfo)
+  }
 
   return (
     <Form
@@ -93,7 +93,7 @@ const FormSignUpComponent = ({ mode }) => {
         </Button>
       </Form.Item>
     </Form>
-  );
-};
+  )
+}
 
-export default FormSignUpComponent;
+export default FormSignUpComponent

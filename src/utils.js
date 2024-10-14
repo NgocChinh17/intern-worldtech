@@ -15,3 +15,13 @@ export function removeAccents(str) {
     .replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y")
     .replace(/Đ/g, "D");
 }
+
+export function getItem(label, key, icon, children, type) {
+  return {
+    key,
+    icon,
+    children,
+    label,
+    type,
+  };
+}

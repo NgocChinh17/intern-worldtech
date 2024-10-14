@@ -4,13 +4,21 @@ import { ROUTES } from "./constants/routes.js";
 
 import LayerRX from "./Layout/LayerRX/LayerRX.jsx";
 import UserLayout from "./Layout/UserLayout";
+import AdminLayout from "./Layout/AdminLayout";
 
+//page user
 import SignIn from "./page/SignIn/signIn.jsx";
 import SignUp from "./page/SignUp/signUp.jsx";
 import Order from "./page/Order/Order.jsx";
 import BurgerBuilder from "./page/BurgerBuilder/BurgerBuilder.jsx";
 import Ingredients from "./page/Ingredients";
 import AreaChart from "./page/AreaCharts/AreaChart.jsx";
+
+//profile
+import Profiles from "./page/Profile/Profiles.jsx";
+
+//Admin
+import HomeAdmin from "./page/HomeAdmin/HomeAdmin.jsx";
 
 function App() {
   return (
@@ -22,9 +30,14 @@ function App() {
 
       <Route path="/" element={<UserLayout />}>
         <Route index element={<BurgerBuilder />} />
-        <Route path={ROUTES.ORDER} element={<Order />} />
-        <Route path={ROUTES.INGREDIENTS} element={<Ingredients />} />
-        <Route path={ROUTES.AREA_CHART} element={<AreaChart />} />
+        <Route path={ROUTES.PAGE.ORDER} element={<Order />} />
+        <Route path={ROUTES.PAGE.INGREDIENTS} element={<Ingredients />} />
+        <Route path={ROUTES.PAGE.PROFILE} element={<Profiles />} />
+      </Route>
+
+      <Route element={<AdminLayout />}>
+        <Route path={ROUTES.ADMIN.HOME_ADMIN} element={<HomeAdmin />} />
+        <Route path={ROUTES.ADMIN.AREA_CHART} element={<AreaChart />} />
       </Route>
     </Routes>
   );
