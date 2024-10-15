@@ -19,12 +19,14 @@ import "./style.scss"
 const Header = () => {
   const storedUserData = JSON.parse(localStorage.getItem("userData"))
   const { role } = storedUserData || {}
-  const userName = storedUserData ? storedUserData.name : null
+  const userName = storedUserData ? storedUserData.name || storedUserData.email : null
   const navigate = useNavigate()
 
   const handleLogout = () => {
     localStorage.removeItem("userData")
+    localStorage.removeItem("email")
     navigate("/")
+    window.location.reload()
   }
 
   const content = (

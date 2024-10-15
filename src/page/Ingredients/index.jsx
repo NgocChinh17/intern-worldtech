@@ -46,9 +46,9 @@ const Ingredients = () => {
     }
   }, [location.state])
 
-  const handleSearch = debounce((value) => {
-    setSearchText(value)
-  }, 1000)
+  // const handleSearch = debounce((value) => {
+  //   setSearchText(value)
+  // }, 1000)
 
   const columns = [
     {
@@ -167,14 +167,14 @@ const Ingredients = () => {
         <StepComponent currentStep={currentStep} />
       </div>
 
-      <div style={{ marginLeft: 200, marginRight: 300, marginBottom: 10, width: 300 }}>
+      {/* <div style={{ marginLeft: 200, marginRight: 300, marginBottom: 10, width: 300 }}>
         <SearchComponent onSearch={handleSearch} />
-      </div>
+      </div> */}
 
       <Table
         className="table-ingredients"
         pagination={{
-          pageSize: 2,
+          pageSize: 1,
           total: filteredData.length,
         }}
         columns={columns}

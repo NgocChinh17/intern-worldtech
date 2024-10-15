@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import { AutoComplete, Button, Flex, Form, Input } from "antd"
+import React, { useState, useEffect } from "react"
+import { AutoComplete, Button, Form, Input } from "antd"
 import { useNavigate, useLocation } from "react-router-dom"
 import { v4 as uuidv4 } from "uuid"
 
@@ -14,10 +14,27 @@ const FormOrderComponent = ({ data }) => {
   const { totalAmount, id } = location.state || {}
 
   const [currentStep, setCurrentStep] = useState(1)
+  const [userOptions, setUserOptions] = useState([])
+  const [form] = Form.useForm()
 
   const userData = JSON.parse(localStorage.getItem("userData")) || {}
-
   const { role } = userData
+
+  useEffect(() => {
+    const users = JSON.parse(localStorage.getItem("users")) || []
+    const options = users.map((user) => ({
+      value: user.name,
+      label: (
+        <div>
+          <span>
+            <UserOutlined />
+          </span>
+          <span style={{ marginLeft: 20 }}>{user.name}</span>
+        </div>
+      ),
+    }))
+    setUserOptions(options)
+  }, [])
 
   const onFinish = (values) => {
     const newData = { ...values, totalAmount, data, id: uuidv4(), userId: id }
@@ -27,30 +44,18 @@ const FormOrderComponent = ({ data }) => {
     navigate("/ingredients", { state: { data, totalAmount, ...values } })
   }
 
-  const Title = (props) => (
-    <Flex align="center" justify="space-between">
-      {props.title}
-    </Flex>
-  )
+  const handleUserSelect = (value) => {
+    const users = JSON.parse(localStorage.getItem("users")) || []
+    const selectedUser = users.find((user) => user.name === value)
 
-  const renderItem = (title) => ({
-    value: title,
-    label: (
-      <div>
-        <span>
-          <UserOutlined />
-        </span>
-        <span style={{ marginLeft: 20 }}>{title}</span>
-      </div>
-    ),
-  })
-
-  const options = [
-    {
-      label: <Title title="Users" />,
-      options: [renderItem("AntDesign"), renderItem("AntDesign UI")],
-    },
-  ]
+    if (selectedUser) {
+      form.setFieldsValue({
+        phone: selectedUser.phone,
+        email: selectedUser.email,
+        address: selectedUser.address,
+      })
+    }
+  }
 
   return (
     <>
@@ -59,6 +64,7 @@ const FormOrderComponent = ({ data }) => {
       </div>
       <div className="wrapperFormOrder">
         <Form
+          form={form}
           name="nest-messages"
           onFinish={onFinish}
           className="formOrder"
@@ -75,18 +81,13 @@ const FormOrderComponent = ({ data }) => {
             <Form.Item
               label="Name"
               name="name"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your name!",
-                },
-              ]}
+              rules={[{ required: true, message: "Please input your name!" }]}
             >
               <AutoComplete
                 popupClassName="certain-category-search-dropdown"
-                popupMatchSelectWidth={500}
-                options={options}
+                options={userOptions}
                 size="large"
+                onSelect={handleUserSelect}
               >
                 <Input.Search size="large" placeholder="input here" />
               </AutoComplete>
@@ -95,12 +96,7 @@ const FormOrderComponent = ({ data }) => {
             <Form.Item
               label="Name"
               name="name"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your name!",
-                },
-              ]}
+              rules={[{ required: true, message: "Please input your name!" }]}
             >
               <Input placeholder="Name" />
             </Form.Item>
@@ -109,12 +105,7 @@ const FormOrderComponent = ({ data }) => {
           <Form.Item
             label="Phone"
             name="phone"
-            rules={[
-              {
-                required: true,
-                message: "Please input your phone!",
-              },
-            ]}
+            rules={[{ required: true, message: "Please input your phone!" }]}
           >
             <Input placeholder="Phone" maxLength={10} />
           </Form.Item>
@@ -123,11 +114,7 @@ const FormOrderComponent = ({ data }) => {
             label="Email"
             name="email"
             rules={[
-              {
-                required: true,
-                type: "email",
-                message: "Please input your email!",
-              },
+              { required: true, type: "email", message: "Please input your email!" },
             ]}
           >
             <Input placeholder="Email" />
@@ -136,12 +123,7 @@ const FormOrderComponent = ({ data }) => {
           <Form.Item
             label="Address"
             name="address"
-            rules={[
-              {
-                required: true,
-                message: "Please input your address!",
-              },
-            ]}
+            rules={[{ required: true, message: "Please input your address!" }]}
           >
             <Input placeholder="Address" />
           </Form.Item>
@@ -149,21 +131,12 @@ const FormOrderComponent = ({ data }) => {
           <Form.Item
             name="Note"
             label="Note"
-            rules={[
-              {
-                required: true,
-                message: "Please input note",
-              },
-            ]}
+            rules={[{ required: true, message: "Please input note" }]}
           >
             <Input.TextArea showCount maxLength={100} placeholder="Note" />
           </Form.Item>
 
-          <Form.Item
-            wrapperCol={{
-              offset: 11,
-            }}
-          >
+          <Form.Item wrapperCol={{ offset: 11 }}>
             <Button className="ButtonOrder" type="primary" htmlType="submit">
               Order
             </Button>

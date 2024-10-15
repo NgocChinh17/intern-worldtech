@@ -1,24 +1,24 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
-import { ROUTES } from "./constants/routes.js";
+import React from "react"
+import { Routes, Route } from "react-router-dom"
+import { ROUTES } from "./constants/routes.js"
 
-import LayerRX from "./Layout/LayerRX/LayerRX.jsx";
-import UserLayout from "./Layout/UserLayout";
-import AdminLayout from "./Layout/AdminLayout";
+import LayerRX from "./Layout/LayerRX/LayerRX.jsx"
+import UserLayout from "./Layout/UserLayout"
+import AdminLayout from "./Layout/AdminLayout"
 
 //page user
-import SignIn from "./page/SignIn/signIn.jsx";
-import SignUp from "./page/SignUp/signUp.jsx";
-import Order from "./page/Order/Order.jsx";
-import BurgerBuilder from "./page/BurgerBuilder/BurgerBuilder.jsx";
-import Ingredients from "./page/Ingredients";
-import AreaChart from "./page/AreaCharts/AreaChart.jsx";
+import SignIn from "./page/SignIn/signIn.jsx"
+import SignUp from "./page/SignUp/signUp.jsx"
+import Order from "./page/Order/Order.jsx"
+import BurgerBuilder from "./page/BurgerBuilder/BurgerBuilder.jsx"
+import Ingredients from "./page/Ingredients"
+import AreaChart from "./page/AreaCharts/AreaChart.jsx"
 
 //profile
-import Profiles from "./page/Profile/Profiles.jsx";
+import Profiles from "./page/Profile/Profiles.jsx"
 
 //Admin
-import HomeAdmin from "./page/HomeAdmin/HomeAdmin.jsx";
+import HomeAdmin from "./page/HomeAdmin/HomeAdmin.jsx"
 
 function App() {
   return (
@@ -40,7 +40,7 @@ function App() {
         <Route path={ROUTES.ADMIN.AREA_CHART} element={<AreaChart />} />
       </Route>
     </Routes>
-  );
+  )
 }
 
-export default App;
+export default App

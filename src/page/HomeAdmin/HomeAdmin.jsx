@@ -1,34 +1,34 @@
-import React, { useState } from "react";
-import { Menu } from "antd";
-import { BarChartOutlined } from "@ant-design/icons";
+import React, { useState } from "react"
+import { Menu } from "antd"
+import { BarChartOutlined, PicRightOutlined } from "@ant-design/icons"
 
-import { getItem } from "../../utils";
+import { getItem } from "../../utils"
 
-import AdminDashboard from "../../component/AdminDashboard/AdminDashboard";
-import AreaChartComponent from "../../component/AreaChartComponent/AreaChartComponent";
+import AdminDashboard from "../../component/AdminDashboard/AdminDashboard"
+import AreaChartComponent from "../../component/AreaChartComponent/AreaChartComponent"
 
 const HomeAdmin = () => {
   const items = [
-    getItem("Dashboard", "dashboard", <BarChartOutlined />),
+    getItem("Dashboard", "dashboard", <PicRightOutlined />),
     getItem("AreaCharts", "areaCharts", <BarChartOutlined />),
-  ];
+  ]
 
-  const [keySelected, setKeySelected] = useState("");
+  const [keySelected, setKeySelected] = useState("")
 
   const handleOnClick = ({ key }) => {
-    setKeySelected(key);
-  };
+    setKeySelected(key)
+  }
 
   const renderPage = (key) => {
     switch (key) {
       case "dashboard":
-        return <AdminDashboard />;
+        return <AdminDashboard />
       case "areaCharts":
-        return <AreaChartComponent />;
+        return <AreaChartComponent />
       default:
-        return <AdminDashboard />;
+        return <AdminDashboard />
     }
-  };
+  }
 
   return (
     <div>
@@ -43,7 +43,7 @@ const HomeAdmin = () => {
         <div style={{ flex: 1, paddingLeft: 10 }}>{renderPage(keySelected)}</div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default HomeAdmin;
+export default HomeAdmin
