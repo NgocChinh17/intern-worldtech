@@ -1,26 +1,49 @@
-import React from "react"
-import { Routes, Route } from "react-router-dom"
-import { ROUTES } from "./constants/routes.js"
+import React, { useEffect, useState } from "react";
+import { Routes, Route } from "react-router-dom";
+import { ROUTES } from "./constants/routes.js";
 
-import LayerRX from "./Layout/LayerRX/LayerRX.jsx"
-import UserLayout from "./Layout/UserLayout"
-import AdminLayout from "./Layout/AdminLayout"
+import LayerRX from "./Layout/LayerRX/LayerRX.jsx";
+import UserLayout from "./Layout/UserLayout";
+import AdminLayout from "./Layout/AdminLayout";
 
 //page user
-import SignIn from "./page/SignIn/signIn.jsx"
-import SignUp from "./page/SignUp/signUp.jsx"
-import Order from "./page/Order/Order.jsx"
-import BurgerBuilder from "./page/BurgerBuilder/BurgerBuilder.jsx"
-import Ingredients from "./page/Ingredients"
-import AreaChart from "./page/AreaCharts/AreaChart.jsx"
+import SignIn from "./page/SignIn/signIn.jsx";
+import SignUp from "./page/SignUp/signUp.jsx";
+import Order from "./page/Order/Order.jsx";
+import BurgerBuilder from "./page/BurgerBuilder/BurgerBuilder.jsx";
+import Ingredients from "./page/Ingredients";
+import AreaChart from "./page/AreaCharts/AreaChart.jsx";
 
 //profile
-import Profiles from "./page/Profile/Profiles.jsx"
+import Profiles from "./page/Profile/Profiles.jsx";
 
 //Admin
-import HomeAdmin from "./page/HomeAdmin/HomeAdmin.jsx"
+import HomeAdmin from "./page/HomeAdmin/HomeAdmin.jsx";
+import firebases from "./firebases.js";
 
 function App() {
+  const [user_, setUser] = useState("");
+
+  useEffect(() => {
+    const fn = firebases.onAuthStateChanged(function a(user) {
+      setUser(user);
+    });
+
+    firebases
+      .fetchData()
+      .then((users) => {
+        setUser(users);
+        // console.log(users);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    return () => {
+      fn();
+    };
+  }, []);
+
   return (
     <Routes>
       <Route element={<LayerRX />}>
@@ -40,7 +63,7 @@ function App() {
         <Route path={ROUTES.ADMIN.AREA_CHART} element={<AreaChart />} />
       </Route>
     </Routes>
-  )
+  );
 }
 
-export default App
+export default App;

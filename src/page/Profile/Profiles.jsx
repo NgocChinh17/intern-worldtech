@@ -7,11 +7,12 @@ const Profiles = () => {
   const userData = JSON.parse(localStorage.getItem("userData")) || {}
   const users = JSON.parse(localStorage.getItem("users")) || []
 
+  const currentUser = users.find((user) => user.email === userData.email) || {}
+
   const onFinish = (values) => {
     try {
       localStorage.setItem("userData", JSON.stringify({ ...userData, ...values }))
 
-      //cập nhật users
       const updateUsers = users.map((user) =>
         user.email === userData.email ? { ...user, ...values } : user
       )
@@ -33,21 +34,16 @@ const Profiles = () => {
           className="formOrder"
           layout="vertical"
           initialValues={{
-            name: userData.name || "",
-            phone: userData.phone || "",
-            email: userData.email || "",
-            address: userData.address || "",
+            name: currentUser.name || "",
+            phone: currentUser.phone || "",
+            email: currentUser.email || "",
+            address: currentUser.address || "",
           }}
         >
           <Form.Item
             label="Name"
             name="name"
-            rules={[
-              {
-                required: true,
-                message: "Please input your name!",
-              },
-            ]}
+            rules={[{ required: true, message: "Please input your name!" }]}
           >
             <Input placeholder="Name" />
           </Form.Item>
@@ -55,12 +51,7 @@ const Profiles = () => {
           <Form.Item
             label="Phone"
             name="phone"
-            rules={[
-              {
-                required: true,
-                message: "Please input your phone!",
-              },
-            ]}
+            rules={[{ required: true, message: "Please input your phone!" }]}
           >
             <Input placeholder="Phone" maxLength={10} />
           </Form.Item>
@@ -69,11 +60,7 @@ const Profiles = () => {
             label="Email"
             name="email"
             rules={[
-              {
-                required: true,
-                type: "email",
-                message: "Please input your email!",
-              },
+              { required: true, type: "email", message: "Please input your email!" },
             ]}
           >
             <Input placeholder="Email" />
@@ -82,12 +69,7 @@ const Profiles = () => {
           <Form.Item
             label="Address"
             name="address"
-            rules={[
-              {
-                required: true,
-                message: "Please input your address!",
-              },
-            ]}
+            rules={[{ required: true, message: "Please input your address!" }]}
           >
             <Input placeholder="Address" />
           </Form.Item>

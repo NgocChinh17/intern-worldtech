@@ -3,9 +3,12 @@ import { Table, Tag } from "antd"
 import { useLocation } from "react-router-dom"
 import { v4 as uuidv4 } from "uuid"
 import { debounce } from "lodash"
+
 import { removeAccents } from "../../utils"
+
 import StepComponent from "../../component/StepComponent/StepComponents"
 import SearchComponent from "../../component/SearchComponent/SearchComponent"
+
 import "./style.scss"
 
 const Ingredients = () => {

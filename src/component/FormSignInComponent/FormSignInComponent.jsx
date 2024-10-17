@@ -1,72 +1,58 @@
-import React, { useEffect, useState } from "react"
-import { Button, Checkbox, Form, Input, message } from "antd"
-import { useNavigate } from "react-router-dom"
-import { ROUTES } from "../../constants/routes"
-import { auth, provider } from "../../firebase"
-import { signInWithPopup } from "firebase/auth"
-import { GoogleOutlined } from "@ant-design/icons"
+import React from "react";
+import { Button, Checkbox, Form, Input, message } from "antd";
+import { useNavigate } from "react-router-dom";
+import { GoogleOutlined } from "@ant-design/icons";
 
-import "./style.scss"
+import firebases from "../../firebases";
+
+import "./style.scss";
+import { ROUTES } from "../../constants/routes";
 
 const FormSignInComponent = () => {
-  const navigate = useNavigate()
-  const [value, setValue] = useState("")
+  const navigate = useNavigate();
+  //login google
+  async function handleLoginGoogle(values) {
+    const assignedRole = values.isAdmin ? "admin" : "user";
 
-  const handleLoginGoogle = () => {
-    signInWithPopup(auth, provider)
-      .then((data) => {
-        console.log("data", data)
-        const userEmail = data.user.email
-        const userName = data.user.displayName
-        const userPhone = data.user.phoneNumber
-        const userUid = data.user.uid
-        setValue(userEmail)
-        localStorage.setItem("email", userEmail)
-
-        const user = {
-          email: userEmail,
-          name: userName,
-          phone: userPhone,
-          uid: userUid,
-        }
-        localStorage.setItem("userData", JSON.stringify(user))
-        navigate("/")
-        message.success("Đăng nhập Google thành công!")
-      })
-      .catch((error) => {
-        console.error("Error during Google login:", error.message)
-        message.error("Google login failed. Please try again.")
-      })
-  }
-
-  useEffect(() => {
-    setValue(localStorage.getItem("email"))
-  }, [])
-
-  const onFinish = (values) => {
-    const storedUsers = JSON.parse(localStorage.getItem("users")) || []
-
-    const user = storedUsers.find(
-      (user) => user.email === values.email && user.password === values.password
-    )
-    if (user) {
-      localStorage.setItem("userData", JSON.stringify(user))
-      const { role } = user
-
-      if (role === "admin") {
-        navigate(ROUTES.ADMIN.HOME_ADMIN)
-      } else {
-        navigate("/")
+    try {
+      const result = await firebases.signIn();
+      const user = result.user;
+      const userData = {
+        name: user.displayName,
+        email: user.email,
+        role: assignedRole,
+      };
+      const valid = await firebases.queryDataUser([["email", "==", user.email]]);
+      if (!valid) {
+        await firebases.setDocUser(userData);
       }
-      message.success("Đăng nhập thành công!")
-    } else {
-      message.error("Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.")
+      navigate("/");
+    } catch (error) {
+      console.log("lỗi do đăng nhập Google : ", error);
+      message.error("Đăng nhập bằng Google thất bại.");
     }
   }
 
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo)
-  }
+  const onFinish = (values) => {
+    const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
+
+    const user = storedUsers.find(
+      (user) => user.email === values.email && user.password === values.password
+    );
+    if (user) {
+      localStorage.setItem("userData", JSON.stringify(user));
+      const { role } = user;
+
+      if (role === "admin") {
+        navigate(ROUTES.ADMIN.HOME_ADMIN);
+      } else {
+        navigate("/");
+      }
+      message.success("Đăng nhập thành công!");
+    } else {
+      message.error("Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.");
+    }
+  };
 
   return (
     <>
@@ -77,7 +63,6 @@ const FormSignInComponent = () => {
         wrapperCol={{ span: 16 }}
         initialValues={{ remember: true }}
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
         autoComplete="off"
         layout="vertical"
       >
@@ -113,7 +98,7 @@ const FormSignInComponent = () => {
         </Button>
       </Form>
     </>
-  )
-}
+  );
+};
 
-export default FormSignInComponent
+export default FormSignInComponent;
