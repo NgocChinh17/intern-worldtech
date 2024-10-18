@@ -1,23 +1,35 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { Button, Form, Input, message } from "antd"
-
 import "./style.scss"
+import firebases from "../../firebases"
 
 const Profiles = () => {
-  const userData = JSON.parse(localStorage.getItem("userData")) || {}
-  const users = JSON.parse(localStorage.getItem("users")) || []
+  const [user, setUser] = useState(null)
+  const [form] = Form.useForm()
 
-  const currentUser = users.find((user) => user.email === userData.email) || {}
+  console.log("user", user)
+
+  useEffect(() => {
+    const unsubscribe = firebases.onAuthStateChanged((user) => {
+      if (user) {
+        setUser(user)
+        form.setFieldsValue({
+          name: user.displayName || user.name || "",
+          phone: user.phone || user.phoneNumber || "",
+          email: user.email || "",
+          address: user.address || "",
+        })
+      } else {
+        setUser(null)
+      }
+    })
+    return () => {
+      unsubscribe()
+    }
+  }, [form])
 
   const onFinish = (values) => {
     try {
-      localStorage.setItem("userData", JSON.stringify({ ...userData, ...values }))
-
-      const updateUsers = users.map((user) =>
-        user.email === userData.email ? { ...user, ...values } : user
-      )
-      localStorage.setItem("users", JSON.stringify(updateUsers))
-
       message.success("Cập nhật thành công")
     } catch (error) {
       message.error("Có lỗi xảy ra khi cập nhật thông tin.")
@@ -29,16 +41,11 @@ const Profiles = () => {
       <h2 style={{ marginLeft: 200 }}>Thông Tin Tài Khoản</h2>
       <div className="wrapperFormOrder">
         <Form
+          form={form}
           name="nest-messages"
           onFinish={onFinish}
           className="formOrder"
           layout="vertical"
-          initialValues={{
-            name: currentUser.name || "",
-            phone: currentUser.phone || "",
-            email: currentUser.email || "",
-            address: currentUser.address || "",
-          }}
         >
           <Form.Item
             label="Name"

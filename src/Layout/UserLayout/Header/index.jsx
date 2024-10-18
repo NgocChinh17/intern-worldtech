@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { Button, Popover, Space } from "antd";
-import { Link, useNavigate } from "react-router-dom";
-import { ROUTES } from "../../../constants/routes";
+import React, { useEffect, useState } from "react"
+import { Button, Popover, Space } from "antd"
+import { Link, useNavigate } from "react-router-dom"
+import { ROUTES } from "../../../constants/routes"
 import {
   EditOutlined,
   HighlightOutlined,
@@ -10,29 +10,34 @@ import {
   ShoppingCartOutlined,
   UnorderedListOutlined,
   UserOutlined,
-} from "@ant-design/icons";
+} from "@ant-design/icons"
 
-import Search from "antd/es/transfer/search";
+import Search from "antd/es/transfer/search"
 
-import "./style.scss";
+import "./style.scss"
+import firebases from "../../../firebases"
 
 const Header = () => {
-  const storedUserData = JSON.parse(localStorage.getItem("userData"));
-  const { role } = storedUserData || {};
-  const userName = storedUserData ? storedUserData.name || storedUserData.email : null;
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const [userLogin, setUser] = useState("") || {};
+  const [user, setUser] = useState(null)
 
-  const handleLogout = () => {
-    localStorage.removeItem("userData");
-    navigate("/");
-    window.location.reload();
-  };
+  useEffect(() => {
+    const unsubscribe = firebases.onAuthStateChanged((user) => {
+      if (user) {
+        setUser(user)
+      } else {
+        setUser(null)
+      }
+    })
+    return () => {
+      unsubscribe()
+    }
+  }, [])
 
   const content = (
     <div>
-      {role === "admin" && (
+      {user?.role === "admin" && (
         <p
           style={{ cursor: "pointer" }}
           onClick={() => navigate(ROUTES.ADMIN.HOME_ADMIN)}
@@ -45,11 +50,11 @@ const Header = () => {
         <UserOutlined /> Thông Tin Tài Khoản
       </p>
 
-      <p onClick={handleLogout} style={{ cursor: "pointer" }}>
+      <p onClick={firebases.signOut(() => setUser(null))} style={{ cursor: "pointer" }}>
         <LogoutOutlined /> Đăng Xuất
       </p>
     </div>
-  );
+  )
 
   return (
     <div className="wrapperHeader">
@@ -77,9 +82,9 @@ const Header = () => {
         </div>
 
         <Popover content={content} title="Thông Tin" trigger="click">
-          {userLogin ? (
+          {user ? (
             <Button>
-              <LoginOutlined /> {userName}
+              <LoginOutlined /> {user.displayName || user.email}{" "}
             </Button>
           ) : (
             <Link to={ROUTES.SIGN_IN}>
@@ -92,7 +97,7 @@ const Header = () => {
         </Popover>
       </Space>
     </div>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

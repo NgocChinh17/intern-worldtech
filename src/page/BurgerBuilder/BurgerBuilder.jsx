@@ -1,17 +1,17 @@
-import React, { useMemo, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { Button, InputNumber, message } from "antd"
 import { useNavigate } from "react-router-dom"
-
 import BurgerComponent from "../../component/BurgerBuilderComponent/BurgerBuilderComponent"
 import TableComponent from "../../component/TableComponent/TableComponent"
 import StepComponent from "../../component/StepComponent/StepComponents"
 
 import "./style.scss"
+import firebases from "../../firebases"
 
 const BurgerBuilder = () => {
   const navigate = useNavigate()
-  const userData = JSON.parse(localStorage.getItem("userData"))
   const [currentStep, setCurrentStep] = useState(0)
+  const [userData, setUserData] = useState(null)
 
   const [data, setData] = useState([
     { key: "1", name: "Salad", price: 1000, amount: 0 },
@@ -19,6 +19,17 @@ const BurgerBuilder = () => {
     { key: "3", name: "Cheese", price: 1000, amount: 0 },
     { key: "4", name: "Meat", price: 10000, amount: 0 },
   ])
+
+  useEffect(() => {
+    const unsubscribe = firebases.onAuthStateChanged((user) => {
+      if (user) {
+        setUserData(user)
+      } else {
+        navigate("/SignIn", { state: { from: window.location.pathname } })
+      }
+    })
+    return () => unsubscribe()
+  }, [navigate])
 
   const columns = [
     {
@@ -53,7 +64,7 @@ const BurgerBuilder = () => {
       title: "Action",
       dataIndex: "action",
       render: (text, record) => renderAction(record),
-      width: "20s%",
+      width: "20%",
     },
   ]
 
@@ -66,9 +77,6 @@ const BurgerBuilder = () => {
         <Button className="button-more" onClick={() => handleMore(record.key)}>
           More
         </Button>
-        {/* <Button className="button-more" onClick={() => handleDelete(record.key)}>
-          xóa
-        </Button> */}
       </div>
     )
   }
@@ -89,10 +97,6 @@ const BurgerBuilder = () => {
     )
   }
 
-  // const handleDelete = (key) => {
-  //   setData((prevData) => prevData.filter((item) => item.key !== key));
-  // };
-
   const handleAmountChange = (key, value) => {
     setData((prevData) =>
       prevData.map((item) => (item.key === key ? { ...item, amount: value } : item))
@@ -104,13 +108,11 @@ const BurgerBuilder = () => {
   }, [data])
 
   const handleSubmit = () => {
-    if (!userData) {
-      navigate("/SignIn", { state: { from: window.location.pathname } })
-    } else if (totalAmount === 0) {
+    if (totalAmount === 0) {
       message.info("Vui lòng chọn món để tiếp tục mua sắm")
     } else {
       setCurrentStep(1)
-      navigate("/Order", { state: { data, totalAmount, id: userData.id } })
+      navigate("/Order", { state: { data, totalAmount, id: userData.uid } })
     }
   }
 

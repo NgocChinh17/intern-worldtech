@@ -1,13 +1,14 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp } from "firebase/app"
 import {
   getAuth,
   GoogleAuthProvider,
   onAuthStateChanged,
   signInWithPopup,
   signOut,
-  signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-} from "firebase/auth";
+  signInWithEmailAndPassword,
+} from "firebase/auth"
+
 import {
   collection,
   doc,
@@ -16,14 +17,16 @@ import {
   setDoc,
   where,
   query,
-} from "firebase/firestore";
-import { v4 } from "uuid";
+} from "firebase/firestore"
+
+import { v4 } from "uuid"
 
 const debName = {
   user: "Users",
+  userUpdate: "UserUpdates",
   order: "Orders",
   config: "Config",
-};
+}
 
 class Firebase {
   static config = {
@@ -36,66 +39,71 @@ class Firebase {
     messagingSenderId: "24215494873",
     appId: "1:24215494873:web:39957d3f901176dda95ec8",
     measurementId: "G-4THNBBYCZM",
-  };
-  static instance;
-  #app;
-  #auth;
-  dbClient;
-  #provider;
+  }
+
+  static instance
+  #app
+  #auth
+  dbClient
+  #provider
+
   async signIn() {
-    return await signInWithPopup(this.#auth, this.#provider);
+    return await signInWithPopup(this.#auth, this.#provider)
   }
 
-  async createUserWithEmailAndPassword(email, password) {
-    return await createUserWithEmailAndPassword(email, password);
+  async createUserWithEmail(email, password) {
+    return await createUserWithEmailAndPassword(this.#auth, email, password)
   }
 
-  async signInWithEmailAndPassword(email, password) {
-    return await signInWithEmailAndPassword(this.#auth, email, password);
+  async signInWithEmail(email, password) {
+    return await signInWithEmailAndPassword(this.#auth, email, password)
   }
 
   signOut(callback) {
-    return () => signOut(this.#auth).then(callback);
+    return () => signOut(this.#auth).then(callback)
   }
+
   onAuthStateChanged(callback) {
-    return onAuthStateChanged(this.#auth, callback);
+    return onAuthStateChanged(this.#auth, callback)
   }
-  getColl = (nameCollection) => collection(this.dbClient, nameCollection);
+
+  getColl = (nameCollection) => collection(this.dbClient, nameCollection)
   async fetchData() {
-    const citiesRef = this.getColl(debName.user);
-    const arr = [];
-    (await getDocs(citiesRef)).forEach((val) => {
-      arr.push(val.data());
-    });
-    return arr;
+    const citiesRef = this.getColl(debName.user)
+    const arr = []
+    ;(await getDocs(citiesRef)).forEach((val) => {
+      arr.push(val.data())
+    })
+    return arr
   }
+
   async setDocUser(body) {
-    return await setDoc(doc(this.getColl(debName.user), v4()), body);
+    return await setDoc(doc(this.getColl(debName.user), v4()), body)
   }
 
   async queryDataUser(cond) {
-    let conds = [];
+    let conds = []
     if (Array.isArray(cond)) {
-      conds = cond.map(([a, b, c]) => where(a, b, c));
+      conds = cond.map(([a, b, c]) => where(a, b, c))
     }
-    const result = await getDocs(query(this.getColl(debName.user), ...conds));
+    const result = await getDocs(query(this.getColl(debName.user), ...conds))
 
-    return result.docs.map((doc) => doc.data())?.[0];
+    return result.docs.map((doc) => doc.data())?.[0]
   }
 
   constructor() {
-    this.#app = initializeApp(Firebase.config);
-    this.dbClient = getFirestore(this.#app);
-    this.#auth = getAuth(this.#app);
-    this.#provider = new GoogleAuthProvider();
+    this.#app = initializeApp(Firebase.config)
+    this.dbClient = getFirestore(this.#app)
+    this.#auth = getAuth(this.#app)
+    this.#provider = new GoogleAuthProvider()
   }
 
   static getInstance() {
     if (!Firebase.instance) {
-      Firebase.instance = new Firebase();
+      Firebase.instance = new Firebase()
     }
-    return Firebase.instance;
+    return Firebase.instance
   }
 }
 
-export default Firebase.getInstance();
+export default Firebase.getInstance()

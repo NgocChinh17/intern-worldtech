@@ -2,34 +2,36 @@ import React from "react"
 import { Button, Checkbox, Form, Input, message } from "antd"
 import { useNavigate } from "react-router-dom"
 import { ROUTES } from "../../constants/routes"
-import { v4 as uuidv4 } from "uuid"
+import firebases from "../../firebases"
 
-const FormSignUpComponent = ({ mode }) => {
+const FormSignUpComponent = () => {
   const navigate = useNavigate()
 
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     const assignedRole = values.isAdmin ? "admin" : "user"
+    const { name, email, password } = values
 
-    const userData = {
-      id: uuidv4(),
-      name: values.name,
-      email: values.email,
-      password: values.password,
-      role: assignedRole,
+    try {
+      const userCredential = await firebases.createUserWithEmail(email, password)
+      const userId = userCredential.user.uid
+
+      const userData = {
+        name: name,
+        email: email,
+        password: password,
+        role: assignedRole,
+      }
+
+      await firebases.setDocUser(userData)
+
+      message.success("Đăng ký thành công, giờ bạn hãy đăng nhập")
+      setTimeout(() => {
+        navigate(ROUTES.SIGN_IN)
+      }, 1000)
+    } catch (error) {
+      console.error("Error registering user: ", error)
+      message.error("Đăng ký thất bại, vui lòng thử lại!")
     }
-
-    const existingUsers = JSON.parse(localStorage.getItem("users")) || []
-
-    existingUsers.push(userData)
-
-    localStorage.setItem("users", JSON.stringify(existingUsers))
-
-    localStorage.setItem("userData", JSON.stringify(userData))
-
-    message.success("Đăng ký thành công, giờ bạn hãy đăng nhập")
-    setTimeout(() => {
-      navigate(ROUTES.SIGN_IN)
-    }, 1000)
   }
 
   const onFinishFailed = (errorInfo) => {
@@ -52,10 +54,7 @@ const FormSignUpComponent = ({ mode }) => {
         className="FormItem"
         label="Name"
         name="name"
-        rules={[
-          { required: true, message: "Please input your name!" },
-          { type: "string", message: "The input is not a valid name!" },
-        ]}
+        rules={[{ required: true, message: "Please input your name!" }]}
       >
         <Input />
       </Form.Item>
@@ -87,10 +86,6 @@ const FormSignUpComponent = ({ mode }) => {
         wrapperCol={{ offset: 0, span: 16 }}
       >
         <Checkbox>Register as Admin</Checkbox>
-      </Form.Item>
-
-      <Form.Item name="remember" wrapperCol={{ offset: 0, span: 16 }}>
-        <Checkbox>Remember me</Checkbox>
       </Form.Item>
 
       <Form.Item wrapperCol={{ offset: 0, span: 16 }}>

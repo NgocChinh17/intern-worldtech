@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { Button, Popover, Space } from "antd"
 import { Link, useNavigate } from "react-router-dom"
 import { ROUTES } from "../../../constants/routes"
@@ -12,17 +12,25 @@ import {
 import Search from "antd/es/transfer/search"
 
 import "./style.scss"
+import firebases from "../../../firebases"
 
 const Header = () => {
-  const storedUserData = JSON.parse(localStorage.getItem("userData"))
-
-  const userName = storedUserData ? storedUserData.name : null
   const navigate = useNavigate()
 
-  const handleLogout = () => {
-    localStorage.removeItem("userData")
-    navigate("/")
-  }
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    const unsubscribe = firebases.onAuthStateChanged((user) => {
+      if (user) {
+        setUser(user)
+      } else {
+        setUser(null)
+      }
+    })
+    return () => {
+      unsubscribe()
+    }
+  }, [])
 
   const content = (
     <div>
@@ -30,7 +38,7 @@ const Header = () => {
         <UserOutlined /> Thông Tin Tài Khoản
       </p>
 
-      <p onClick={handleLogout} style={{ cursor: "pointer" }}>
+      <p onClick={firebases.signOut(() => setUser(null))} style={{ cursor: "pointer" }}>
         <LogoutOutlined /> Đăng Xuất
       </p>
     </div>
@@ -48,10 +56,11 @@ const Header = () => {
         <div className="searchHeader">
           <Search placeholder="input search text" />
         </div>
+
         <Popover content={content} title="Thông Tin" trigger="click">
-          {userName ? (
+          {user ? (
             <Button>
-              <LoginOutlined /> {userName}
+              <LoginOutlined /> {user.displayName || user.email}{" "}
             </Button>
           ) : (
             <Link to={ROUTES.SIGN_IN}>
